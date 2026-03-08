@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>JNTU Attendance Checker — JNTUACEA Subject-wise Tracker</title>
+<meta name="description" content="Check your JNTUACEA attendance instantly. Subject-wise percentage, 75% calculator, bunk tracker — all in one place.">
+<meta name="keywords" content="JNTU attendance, JNTUACEA attendance, jntu attendance checker, jntua attendance, attendance percentage calculator, jntu bunk calculator">
+<meta property="og:title" content="JNTU Attendance Checker 🎓">
+<meta property="og:description" content="Check your JNTUACEA subject-wise attendance in 30 seconds!">
+<meta property="og:url" content="https://jntu-repati-kosam.onrender.com">
+<meta property="og:type" content="website"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<!-- fallback for SF Pro -->
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue1: #0a1628;
+  --blue2: #0d2045;
+  --blue3: #1a3a6b;
+  --accent: #4a9eff;
+  --accent2: #60b8ff;
+  --accent3: #a8d8ff;
+  --glass: rgba(255,255,255,0.08);
+  --glass2: rgba(255,255,255,0.13);
+  --glass3: rgba(255,255,255,0.18);
+  --border: rgba(255,255,255,0.15);
+  --border2: rgba(255,255,255,0.25);
+  --text: #ffffff;
+  --text2: rgba(255,255,255,0.75);
+  --text3: rgba(255,255,255,0.45);
+  --green: #30d158;
+  --green-g: rgba(48,209,88,0.15);
+  --amber: #ffd60a;
+  --amber-g: rgba(255,214,10,0.15);
+  --red: #ff453a;
+  --red-g: rgba(255,69,58,0.15);
+  --radius: 20px;
+  --radius-sm: 14px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size:16px; }
+
+body {
+  min-height: 100vh;
+  background: var(--blue1);
+  color: var(--text);
+  font-family: 'Figtree', 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ANIMATED BACKGROUND ─────────────────── */
+.bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(145deg, #040d1f 0%, #0a1a3a 40%, #0d2248 70%, #071530 100%);
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: float 20s ease-in-out infinite alternate;
+}
+.orb1 { width:500px;height:500px;background:radial-gradient(circle,#1e5fc7,transparent); top:-150px;left:-100px;animation-duration:22s; }
+.orb2 { width:400px;height:400px;background:radial-gradient(circle,#0e3f9e,transparent); bottom:-100px;right:-80px;animation-duration:18s;animation-delay:-6s; }
+.orb3 { width:300px;height:300px;background:radial-gradient(circle,#2563eb,transparent); top:35%;left:55%;animation-duration:14s;animation-delay:-10s;opacity:0.2; }
+.orb4 { width:250px;height:250px;background:radial-gradient(circle,#3b82f6,transparent); top:60%;left:10%;animation-duration:16s;animation-delay:-4s;opacity:0.15; }
+
+@keyframes float {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(30px,40px) scale(1.15); }
+}
+
+/* grid overlay */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── LAYOUT ──────────────────────────────── */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3.5rem 0 1.5rem;
+}
+
+.logo {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff 30%, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-dot { color: var(--accent); }
+
+.college-pill {
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 0.3rem 0.9rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+/* ── GLASS CARD ──────────────────────────── */
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+/* ── TELUGU DIALOGUE TICKER ──────────────── */
+.dialogue-bar {
+  background: linear-gradient(135deg, rgba(74,158,255,0.15), rgba(96,184,255,0.08));
+  border: 1px solid rgba(74,158,255,0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow: hidden;
+}
+
+.dialogue-emoji { font-size: 1.2rem; flex-shrink: 0; }
+
+.dialogue-text {
+  font-size: 0.82rem;
+  color: var(--accent3);
+  font-weight: 600;
+  animation: ticker-fade 0.5s ease;
+  line-height: 1.4;
+}
+
+@keyframes ticker-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LOGIN ───────────────────────────────── */
+#login-section { animation: rise 0.6s ease both; }
+
+.page-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+
+.page-sub {
+  font-size: 0.9rem;
+  color: var(--text3);
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.field { margin-bottom: 1rem; }
+
+.field label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  margin-bottom: 0.4rem;
+}
+
+.field input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.1rem;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  outline: none;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.field input:focus {
+  border-color: var(--accent);
+  background: rgba(74,158,255,0.1);
+  box-shadow: 0 0 0 4px rgba(74,158,255,0.15);
+}
+
+.field input::placeholder { color: rgba(255,255,255,0.2); }
+
+.btn-main {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(37,99,235,0.4);
+  margin-top: 0.5rem;
+}
+
+.btn-main:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(37,99,235,0.55); }
+.btn-main:active { transform: scale(0.99); }
+.btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+}
+
+.loader-row {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.error-pill {
+  display: none;
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  background: var(--red-g);
+  border: 1px solid rgba(255,69,58,0.35);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: #ff6b6b;
+  font-family: 'DM Mono', monospace;
+  backdrop-filter: blur(10px);
+}
+
+.privacy-note {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text3);
+  margin-top: 1rem;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── HOLIDAY WIDGET ──────────────────────── */
+.holiday-card {
+  margin-top: 1.25rem;
+  background: linear-gradient(135deg, rgba(48,209,88,0.1), rgba(48,209,88,0.05));
+  border: 1px solid rgba(48,209,88,0.25);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem;
+}
+
+.holiday-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--green);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.holiday-list { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.holiday-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.h-name { color: var(--text2); font-weight: 600; }
+.h-date { color: var(--text3); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+.h-soon {
+  background: rgba(48,209,88,0.2);
+  color: var(--green);
+  border-radius: 20px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.65rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+}
+
+/* ── DASHBOARD ───────────────────────────── */
+#dashboard-section { display: none; animation: rise 0.5s ease both; }
+
+.dash-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.student-name {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+
+.student-sub {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  margin-top: 0.1rem;
+}
+
+.back-btn {
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--text2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-family: 'Figtree', sans-serif;
+}
+.back-btn:hover { background: var(--glass3); color: white; }
+
+/* ── TELUGU ROAST BANNER ─────────────────── */
+.roast-banner {
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: rise 0.4s ease both;
+  backdrop-filter: blur(10px);
+}
+
+.roast-banner.safe   { background: var(--green-g); border: 1px solid rgba(48,209,88,0.3); }
+.roast-banner.warn   { background: var(--amber-g); border: 1px solid rgba(255,214,10,0.3); }
+.roast-banner.danger { background: var(--red-g);   border: 1px solid rgba(255,69,58,0.35); }
+
+.roast-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+.roast-body  { }
+.roast-telugu {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.roast-en { font-size: 0.75rem; color: var(--text3); font-style: italic; }
+
+.roast-banner.safe   .roast-telugu { color: var(--green); }
+.roast-banner.warn   .roast-telugu { color: var(--amber); }
+.roast-banner.danger .roast-telugu { color: #ff6b6b; }
+
+/* ── OVERALL HERO ────────────────────────── */
+.hero-card {
+  background: linear-gradient(135deg, rgba(37,99,235,0.3), rgba(29,78,216,0.15));
+  border: 1px solid rgba(74,158,255,0.3);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74,158,255,0.6), transparent);
+}
+
+.hero-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent3);
+  margin-bottom: 0.35rem;
+}
+
+.hero-pct {
+  font-family: 'Nunito', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.hero-detail { font-size: 0.82rem; color: var(--text3); }
+
+.hero-msg {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  display: inline-block;
+}
+.hero-msg.safe   { background: var(--green-g); color: var(--green); border: 1px solid rgba(48,209,88,0.3); }
+.hero-msg.warn   { background: var(--amber-g); color: var(--amber); border: 1px solid rgba(255,214,10,0.3); }
+.hero-msg.danger { background: var(--red-g);   color: var(--red);   border: 1px solid rgba(255,69,58,0.3); }
+
+/* Ring */
+.ring-wrap { position: relative; width: 96px; height: 96px; flex-shrink: 0; }
+.ring-svg  { transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
+.ring-prog  {
+  fill: none; stroke-width: 8; stroke-linecap: round;
+  transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);
+}
+.ring-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.ring-pct-sm {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.ring-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── STAT STRIP ──────────────────────────── */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 0.7rem;
+  text-align: center;
+  backdrop-filter: blur(16px);
+  transition: transform 0.2s;
+}
+.stat-box:hover { transform: translateY(-2px); }
+
+.stat-val {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── ANALYSIS CARD ───────────────────────── */
+.analysis-card {
+  margin-bottom: 1rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.a-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+}
+
+.a-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+.a-value { font-size: 1.1rem; font-weight: 800; font-family: 'Nunito', sans-serif; }
+
+/* ── SECTION HEAD ────────────────────────── */
+.sec-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.sec-head::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── SUBJECT CARDS ───────────────────────── */
+.subject-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.sub-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.2rem;
+  backdrop-filter: blur(16px);
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: rise 0.4s ease both;
+}
+
+.sub-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 4px 0 0 4px;
+}
+
+.sub-card.safe::before   { background: var(--green); }
+.sub-card.warn::before   { background: var(--amber); }
+.sub-card.danger::before { background: var(--red); }
+
+.sub-card:hover { background: var(--glass2); transform: translateX(3px); }
+
+.sub-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.sub-left { flex: 1; min-width: 0; }
+
+.sub-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sub-hint {
+  font-size: 0.72rem;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+}
+
+.sub-hint.safe   { color: rgba(48,209,88,0.7); }
+.sub-hint.warn   { color: rgba(255,214,10,0.7); }
+.sub-hint.danger { color: rgba(255,69,58,0.7); }
+
+.sub-pct {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.sub-pct.safe   { color: var(--green); }
+.sub-pct.warn   { color: var(--amber); }
+.sub-pct.danger { color: var(--red); }
+
+/* progress bar */
+.sub-bar-track {
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  margin-top: 0.6rem;
+  overflow: hidden;
+}
+.sub-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.9s cubic-bezier(.4,0,.2,1);
+}
+.sub-bar-fill.safe   { background: var(--green); }
+.sub-bar-fill.warn   { background: var(--amber); }
+.sub-bar-fill.danger { background: var(--red); }
+
+/* drill-down */
+.drill-panel {
+  display: none;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.drill-panel.open { display: block; }
+
+.drill-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.drill-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.28rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+}
+.drill-row:last-child { border-bottom: none; }
+.drill-date { color: var(--text3); }
+.drill-p { color: var(--green); font-weight: 500; }
+.drill-a { color: var(--red);   font-weight: 500; }
+.drill-o { color: var(--text3); }
+
+/* ── NEED-TO-ATTEND ──────────────────────── */
+.need-section {
+  background: linear-gradient(135deg, rgba(255,214,10,0.1), rgba(255,214,10,0.04));
+  border: 1px solid rgba(255,214,10,0.25);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.need-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.5rem; margin-top: 0.6rem; }
+
+.need-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,214,10,0.2);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+.need-sub { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text2); }
+.need-num { font-family: 'Nunito', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--amber); line-height: 1; }
+.need-desc { font-size: 0.65rem; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* ── HOLIDAY DASH WIDGET ─────────────────── */
+.holiday-dash {
+  background: linear-gradient(135deg, rgba(48,209,88,0.1), rgba(48,209,88,0.04));
+  border: 1px solid rgba(48,209,88,0.2);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem;
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.82rem;
+}
+.holiday-item:last-child { border-bottom: none; }
+.h-nm { font-weight: 600; color: var(--text2); }
+.h-dt { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text3); }
+.h-badge {
+  font-size: 0.62rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  background: rgba(48,209,88,0.2);
+  color: var(--green);
+  white-space: nowrap;
+}
+
+/* ── SMART ADVICE CARD ───────────────────── */
+.advice-card {
+  background: linear-gradient(135deg, rgba(74,158,255,0.12), rgba(74,158,255,0.05));
+  border: 1px solid rgba(74,158,255,0.25);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem;
+}
+.advice-title { font-size: 0.75rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+.advice-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.advice-item { font-size: 0.82rem; color: var(--text2); display: flex; gap: 0.5rem; line-height: 1.4; }
+.advice-dot { color: var(--accent); flex-shrink: 0; margin-top: 0.1rem; }
+
+/* ── FOOTER ──────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 2rem 0 1rem;
+  margin-top: 1rem;
+}
+
+.footer-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
+.footer-link {
+  color: var(--accent3);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168,216,255,0.3);
+  transition: color 0.15s;
+}
+.footer-link:hover { color: white; }
+
+/* ── ANIMATIONS ──────────────────────────── */
+@keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin  { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 480px) {
+  .stat-strip { grid-template-columns: repeat(2,1fr); }
+  .hero-pct   { font-size: 2.8rem; }
+  .page-title { font-size: 1.7rem; }
+  .analysis-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="orb orb4"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="logo">attend<span class="logo-dot">.</span></div>
+    <div class="college-pill">JNTUACEA</div>
+  </div>
+
+  <!-- DIALOGUE TICKER -->
+  <div class="dialogue-bar">
+    <span class="dialogue-emoji" id="tick-emoji">😅</span>
+    <span class="dialogue-text" id="tick-text">Loading wisdom...</span>
+  </div>
+
+  <!-- ══ LOGIN ══ -->
+  <section id="login-section">
+    <div class="glass-card">
+      <h1 class="page-title">Meeru ready<br>gaa unnara? 👀</h1>
+      <p class="page-sub">Roll number pettandi — attendance real ga chupistam!</p>
+
+      <div class="field">
+        <label for="username">Roll Number</label>
+        <input id="username" type="text" placeholder="e.g. 22BD1A0501" autocomplete="off" spellcheck="false"/>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Your portal password"/>
+      </div>
+      <button class="btn-main" id="check-btn" onclick="fetchData()">
+        <span id="btn-text">Check Attendance 🚀</span>
+        <span class="loader-row" id="btn-loader">
+          <span class="spinner"></span> Fetching ra bhai...
+        </span>
+      </button>
+      <div class="error-pill" id="error-pill"></div>
+      <p class="privacy-note">🔒 credentials never stored — direct to portal only</p>
+    </div>
+
+    <!-- UPCOMING HOLIDAYS -->
+    <div class="holiday-card">
+      <div class="holiday-head">🗓️ intiki veldham padandi</div>
+      <div class="holiday-list" id="login-holidays"></div>
+    </div>
+  </section>
+
+  <!-- ══ DASHBOARD ══ -->
+  <section id="dashboard-section">
+
+    <div class="dash-topbar">
+      <div>
+        <div class="student-name" id="d-name"></div>
+        <div class="student-sub" id="d-sub"></div>
+      </div>
+      <button class="back-btn" onclick="goBack()">← Back</button>
+    </div>
+
+    <!-- ROAST BANNER -->
+    <div class="roast-banner" id="roast-banner">
+      <div class="roast-emoji" id="roast-emoji"></div>
+      <div class="roast-body">
+        <div class="roast-telugu" id="roast-telugu"></div>
+        <div class="roast-en" id="roast-en"></div>
+      </div>
+    </div>
+
+    <!-- HERO OVERALL -->
+    <div class="hero-card glass-card">
+      <div>
+        <div class="hero-label">Overall Attendance</div>
+        <div class="hero-pct" id="d-pct"></div>
+        <div class="hero-detail" id="d-detail"></div>
+        <div class="hero-msg" id="d-msg"></div>
+      </div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" width="96" height="96" viewBox="0 0 96 96">
+          <circle class="ring-track" cx="48" cy="48" r="40"/>
+          <circle class="ring-prog" id="ring-prog" cx="48" cy="48" r="40"
+            stroke-dasharray="251.3" stroke-dashoffset="251.3"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-pct-sm" id="ring-pct-sm"></div>
+          <div class="ring-lbl">score</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAT STRIP -->
+    <div class="stat-strip">
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--green)" id="s-present"></div>
+        <div class="stat-lbl">Present</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--red)" id="s-absent"></div>
+        <div class="stat-lbl">Absent</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--amber)" id="s-skip"></div>
+        <div class="stat-lbl">Can Skip</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--accent2)" id="s-avg"></div>
+        <div class="stat-lbl">Avg %</div>
+      </div>
+    </div>
+
+    <!-- SMART ANALYSIS -->
+    <div class="glass-card analysis-card">
+      <div class="hero-label" style="margin-bottom:0">📊 Deep Analysis</div>
+      <div class="analysis-grid" id="analysis-grid"></div>
+      <div id="advice-box" style="margin-top:0.75rem;"></div>
+    </div>
+
+    <!-- SUBJECTS -->
+    <div class="sec-head">Subject Breakdown</div>
+    <div class="subject-list" id="subject-list"></div>
+
+    <!-- NEED TO ATTEND -->
+    <div id="need-section" style="display:none;" class="need-section">
+      <div class="hero-label">⚠️ Classes needed to reach 75%</div>
+      <div class="need-grid" id="need-grid"></div>
+    </div>
+
+    <!-- UPCOMING HOLIDAYS ON DASH -->
+    <div class="sec-head">Indian Holidays</div>
+    <div class="holiday-dash" id="dash-holidays"></div>
+
+    <footer>
+      <p class="footer-text">
+        Developed by&nbsp;
+        <a class="footer-link" href="https://www.linkedin.com/in/t-manjunath-27b469381" target="_blank" rel="noopener">Manjunath</a>
+        &nbsp;·&nbsp; CSE AI &amp; ML &nbsp;·&nbsp; JNTUACEA<br>
+        <span style="font-size:0.62rem;opacity:0.5;">75% kaadhu ra — life ki 100% ivvu 🙏</span>
+      </p>
+    </footer>
+  </section>
+
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════════════
+//  INDIAN HOLIDAYS 2025-2026
+// ══════════════════════════════════════════════
+const HOLIDAYS = [
+  { name:"Ugadi",               date:"2025-03-30", telugu:"ఉగాది" },
+  { name:"Ram Navami",          date:"2025-04-06", telugu:"శ్రీరామ నవమి" },
+  { name:"Ambedkar Jayanti",    date:"2025-04-14", telugu:"అంబేద్కర్ జయంతి" },
+  { name:"Good Friday",         date:"2025-04-18", telugu:"గుడ్ ఫ్రైడే" },
+  { name:"Maharashtra Day",     date:"2025-05-01", telugu:"మహారాష్ట్ర దినం" },
+  { name:"Eid ul-Adha",         date:"2025-06-07", telugu:"బకరీద్" },
+  { name:"Muharram",            date:"2025-07-06", telugu:"మొహర్రం" },
+  { name:"Independence Day",    date:"2025-08-15", telugu:"స్వాతంత్ర్య దినం" },
+  { name:"Janmashtami",         date:"2025-08-16", telugu:"జన్మాష్టమి" },
+  { name:"Ganesh Chaturthi",    date:"2025-08-27", telugu:"వినాయక చవితి 🐘" },
+  { name:"Milad-un-Nabi",       date:"2025-09-05", telugu:"మిలాద్-ఉన్-నబీ" },
+  { name:"Gandhi Jayanti",      date:"2025-10-02", telugu:"గాంధీ జయంతి" },
+  { name:"Dussehra",            date:"2025-10-02", telugu:"దసరా 🏹" },
+  { name:"Diwali",              date:"2025-10-20", telugu:"దీపావళి 🪔" },
+  { name:"Guru Nanak Jayanti",  date:"2025-11-05", telugu:"గురు నానక్ జయంతి" },
+  { name:"Christmas",           date:"2025-12-25", telugu:"క్రిస్మస్ 🎄" },
+  { name:"New Year",            date:"2026-01-01", telugu:"నూతన సంవత్సరం 🎉" },
+  { name:"Pongal/Sankranti",    date:"2026-01-14", telugu:"సంక్రాంతి 🪁" },
+  { name:"Republic Day",        date:"2026-01-26", telugu:"గణతంత్ర దినం" },
+  { name:"Maha Shivaratri",     date:"2026-02-17", telugu:"మహాశివరాత్రి" },
+  { name:"Holi",                date:"2026-03-03", telugu:"హోలీ 🎨" },
+  { name:"Ugadi 2026",          date:"2026-03-19", telugu:"ఉగాది 2026 🌸" },
+];
+
+// ══════════════════════════════════════════════
+//  TELUGU DIALOGUES (login ticker)
+// ══════════════════════════════════════════════
+const DIALOGUES = [
+  { e:"😴", t:"Class ki raaledhu, notes ki ready — classic JNTUACEA style!" },
+  { e:"🎯", t:"75% ante chaaladhu bro, 75.1% kaavaali — system ni beat cheyyali!" },
+  { e:"🤣", t:"Bunk chesthe professor call chestadu, class ki vaste signal raadhu. Life is unfair!" },
+  { e:"🙏", t:"Amma cheppindi class ki vellu ani... portal cheppindi veelledhu ani 😭" },
+  { e:"🔥", t:"CGPA tho patu attendance kuda maintain cheyyali bro — double tension!" },
+  { e:"💀", t:"Detention list lo peru choostey... adi cinema lo villain feeling!" },
+  { e:"😂", t:"Professor: 'Attendance emi?' Student: 'Sir, spiritually present unna sir!'" },
+  { e:"🧠", t:"Attendance app use chesthe smart, class ki velthe brilliant — choice meeru!" },
+  { e:"😎", t:"Bunk ki plan chesamu, app open chesamu, reality check ayyindi. RIP plan!" },
+  { e:"🤝", t:"Proxy vesanu ani confidence — app lo truth choodandi first!" },
+];
+
+// ══════════════════════════════════════════════
+//  TELUGU ROASTS based on attendance
+// ══════════════════════════════════════════════
+const ROASTS = {
+  safe_high: [
+    { e:"🏆", t:"Babu meeru gold medalist material!", en:"You're gold medalist material!" },
+    { e:"🔥", t:"Class topper ki attendance topper — combo pack bro!", en:"Topper in class AND attendance — combo deal!" },
+    { e:"👑", t:"Meeru chaaladhu sir, meeru legend!", en:"Not enough sir, you're a legend!" },
+  ],
+  safe: [
+    { e:"✅", t:"괜찮아 bro, 75 cross chesaru — ippudu chill maadi!", en:"Crossed 75% — now chill!" },
+    { e:"😊", t:"Professor ki cheppukondi 'nenu regular' ani — technically truth!", en:"Tell professor 'I'm regular' — technically true!" },
+    { e:"🎉", t:"Safe zone lo unnaru — oka bunk ki permission granted!", en:"You're in safe zone — one bunk approved!" },
+  ],
+  warn: [
+    { e:"⚠️", t:"Bhai bhai bhai — oka class miss ayithe disaster!", en:"One more miss and it's disaster!" },
+    { e:"😰", t:"Heartbeat fast avutundha? Attendance choodali ante — normal bro!", en:"Heart racing? That's normal when checking attendance!" },
+    { e:"🫣", t:"75 border meeda walk chestunnaru — tightrope artist ani call cheyyali!", en:"Walking the 75% tightrope — call yourself an artist!" },
+  ],
+  danger: [
+    { e:"💀", t:"Bro meeru legend stature ki veltunnaru — detention legend!", en:"You're reaching legend status — detention legend!" },
+    { e:"🚨", t:"Amma ki cheppocchu? Ledu, app cheppindi already 😭", en:"Tell mom? No need — the app already knows 😭" },
+    { e:"😭", t:"Idi choodandi professor ki show cheyyandi — maybe pity marks vastaayi!", en:"Show this to professor — maybe pity marks will come!" },
+    { e:"🙏", t:"Vinayaka chaviti ki pray chesaraa? Ippudu chesthe panichestundhi!", en:"Did you pray at Ganesh Chaturthi? Try now, might work!" },
+  ],
+};
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const cl = p => p >= 85 ? 'safe' : p >= 75 ? 'warn' : 'danger';
+const pctColor = c => c==='safe'?'var(--green)':c==='warn'?'var(--amber)':'var(--red)';
+const need  = (p,t) => { const n=(0.75*t-p)/0.25; return n>0?Math.ceil(n):0; };
+const skip  = (p,t) => Math.max(Math.floor(p-0.75*t),0);
+
+function getRoast(pct) {
+  const pool = pct>=90?ROASTS.safe_high : pct>=75?ROASTS.safe : pct>=65?ROASTS.warn : ROASTS.danger;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+// ── TICKER ──────────────────────────────────
+let tickIdx = 0;
+function rotateTicker() {
+  const d = DIALOGUES[tickIdx % DIALOGUES.length];
+  $('tick-emoji').textContent = d.e;
+  const el = $('tick-text');
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'ticker-fade 0.5s ease';
+  el.textContent = d.t;
+  tickIdx++;
+}
+rotateTicker();
+setInterval(rotateTicker, 4000);
+
+// ── HOLIDAYS ────────────────────────────────
+function renderHolidays(containerId, limit=5) {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const upcoming = HOLIDAYS
+    .map(h => ({ ...h, d: new Date(h.date) }))
+    .filter(h => h.d >= today)
+    .sort((a,b) => a.d - b.d)
+    .slice(0, limit);
+
+  const el = $(containerId);
+  if (!el) return;
+
+  const fmt = d => d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const diff = d => Math.round((d-today)/(1000*60*60*24));
+
+  el.innerHTML = upcoming.map(h => {
+    const days = diff(h.d);
+    const badge = days===0?'Today! 🎉':days<=7?`${days}d away`:days<=30?`${days}d away`:'';
+    if (containerId === 'login-holidays') {
+      return `<div class="holiday-row">
+        <span class="h-name">${h.telugu} <span style="font-size:.7rem;color:var(--text3)">${h.name}</span></span>
+        <span style="display:flex;align-items:center;gap:.4rem;">
+          ${badge?`<span class="h-soon">${badge}</span>`:''}
+          <span class="h-date">${fmt(h.d)}</span>
+        </span>
+      </div>`;
+    } else {
+      return `<div class="holiday-item">
+        <div>
+          <div class="h-nm">${h.telugu}</div>
+          <div class="h-dt">${h.name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.4rem;">
+          ${badge?`<span class="h-badge">${badge}</span>`:''}
+          <span class="h-dt">${fmt(h.d)}</span>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+renderHolidays('login-holidays', 6);
+
+// ── LOADING ─────────────────────────────────
+function setLoading(on) {
+  $('check-btn').disabled = on;
+  $('btn-text').style.display   = on ? 'none' : 'inline';
+  $('btn-loader').style.display = on ? 'inline-flex' : 'none';
+}
+
+// ── FETCH ────────────────────────────────────
+async function fetchData() {
+  const username = $('username').value.trim();
+  const password = $('password').value.trim();
+  const errEl = $('error-pill');
+  errEl.style.display = 'none';
+
+  if (!username || !password) {
+    errEl.textContent = '⚠️ Roll number mariyu password rendu kavali bro!';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res  = await fetch('/api/attendance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      errEl.textContent = '❌ ' + (data.error || 'Emi jarigindo teliyatledu. Try cheyyandi!');
+      errEl.style.display = 'block';
+      return;
+    }
+    buildDashboard(data);
+  } catch {
+    errEl.textContent = '❌ Network error — internet check cheyyandi!';
+    errEl.style.display = 'block';
+  } finally {
+    setLoading(false);
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key==='Enter') fetchData(); });
+
+function goBack() {
+  $('dashboard-section').style.display = 'none';
+  $('login-section').style.display     = 'block';
+  $('password').value = '';
+  window.scrollTo({top:0});
+}
+
+// ── BUILD DASHBOARD ──────────────────────────
+function buildDashboard(d) {
+  const pct  = d.overall;
+  const c    = cl(pct);
+  const col  = pctColor(c);
+  const skipAll = skip(d.present, d.total);
+  const needAll = need(d.present, d.total);
+
+  // Student
+  $('d-name').textContent = d.name || d.roll;
+  $('d-sub').textContent  = [d.roll, d.branch].filter(Boolean).join('  ·  ');
+
+  // Roast
+  const roast = getRoast(pct);
+  const rb = $('roast-banner');
+  rb.className = `roast-banner ${c}`;
+  $('roast-emoji').textContent   = roast.e;
+  $('roast-telugu').textContent  = roast.t;
+  $('roast-en').textContent      = roast.en;
+
+  // Hero
+  $('d-pct').textContent    = pct + '%';
+  $('d-pct').style.color    = col;
+  $('d-detail').textContent = `${d.present} present / ${d.total} total classes`;
+
+  const msgs = {
+    safe:   `🔥 ${skipAll} class(es) buffer remaining`,
+    warn:   `⚠️ Only ${skipAll} class(es) left to spare!`,
+    danger: `🚨 Attend ${needAll} more to reach 75%`,
+  };
+  const msgEl = $('d-msg');
+  msgEl.textContent = msgs[c];
+  msgEl.className   = `hero-msg ${c}`;
+
+  // Ring
+  const circ = 251.3;
+  const ring = $('ring-prog');
+  ring.style.stroke = col;
+  ring.style.filter = `drop-shadow(0 0 6px ${col})`;
+  setTimeout(() => ring.style.strokeDashoffset = circ-(pct/100)*circ, 80);
+  $('ring-pct-sm').textContent = pct + '%';
+  $('ring-pct-sm').style.color = col;
+
+  // Stats
+  $('s-present').textContent = d.present;
+  $('s-absent').textContent  = d.total - d.present;
+  $('s-skip').textContent    = skipAll;
+  const avgPct = Math.round(d.subjects.reduce((a,s)=>a+s.percent,0)/d.subjects.length);
+  $('s-avg').textContent     = avgPct + '%';
+
+  // Analysis
+  const best  = [...d.subjects].sort((a,b)=>b.percent-a.percent)[0];
+  const worst = [...d.subjects].sort((a,b)=>a.percent-b.percent)[0];
+  const totalAbsent = d.total - d.present;
+  const projectedEnd = Math.round(d.total * 1.15);
+  const projectedPct = Math.round(d.present / projectedEnd * 100);
+
+  $('analysis-grid').innerHTML = [
+    { l:'Best Subject',      v: best?.subject?.split(' ').slice(0,2).join(' '),  col:'var(--green)' },
+    { l:'Needs Attention',   v: worst?.subject?.split(' ').slice(0,2).join(' '), col:'var(--red)' },
+    { l:'Total Absents',     v: totalAbsent + ' days',   col:'var(--amber)' },
+    { l:'Projected (end)',   v: projectedPct + '%',       col:'var(--accent2)' },
+  ].map(i=>`
+    <div class="a-item">
+      <div class="a-label">${i.l}</div>
+      <div class="a-value" style="color:${i.col}">${i.v}</div>
+    </div>`).join('');
+
+  // Smart advice
+  const advices = [];
+  if (pct < 75) {
+    advices.push(`🎯 Attend every class from now — no more bunks until ${needAll} consecutive classes done.`);
+    advices.push(`📅 Check holiday list below — don't confuse holidays with bunks!`);
+  } else if (pct < 85) {
+    advices.push(`⚡ You have ${skipAll} class(es) buffer. Use it wisely — exams are near!`);
+    advices.push(`📚 Focus on ${worst?.subject?.split(' ')[0]} — it's pulling your average down.`);
+  } else {
+    advices.push(`🏆 Excellent! Keep this up for internal marks advantage.`);
+    advices.push(`😎 You can afford ${skipAll} more bunks — but bunk cheyyadam meeru em chestaru!`);
+  }
+  advices.push(`📊 Your best subject: ${best?.subject?.split(' ')[0]} at ${best?.percent}% — set it as wallpaper 😂`);
+
+  $('advice-box').innerHTML = `
+    <div class="advice-card">
+      <div class="advice-title">🤖 AI Analysis</div>
+      <div class="advice-list">
+        ${advices.map(a=>`<div class="advice-item"><span class="advice-dot">›</span><span>${a}</span></div>`).join('')}
+      </div>
+    </div>`;
+
+  // Subjects
+  const sl = $('subject-list');
+  sl.innerHTML = '';
+  const sorted = [...d.subjects].sort((a,b)=>a.percent-b.percent);
+  sorted.forEach((s, i) => {
+    const c2   = cl(s.percent);
+    const col2 = pctColor(c2);
+    const skip2 = skip(s.present, s.total);
+    const need2 = need(s.present, s.total);
+    const hintTxt = need2>0
+      ? `attend ${need2} more to reach 75%`
+      : skip2>0 ? `can skip ${skip2} more` : 'just at 75%';
+
+    const card = document.createElement('div');
+    card.className = `sub-card ${c2}`;
+    card.style.animationDelay = `${i*0.06}s`;
+    card.innerHTML = `
+      <div class="sub-row">
+        <div class="sub-left">
+          <div class="sub-name">${s.subject}</div>
+          <div class="sub-hint ${c2}">${s.present}P · ${s.total-s.present}A · ${hintTxt}</div>
+        </div>
+        <div class="sub-pct ${c2}">${s.percent}%</div>
+      </div>
+      <div class="sub-bar-track">
+        <div class="sub-bar-fill ${c2}" style="width:0%" data-w="${s.percent}%"></div>
+      </div>
+      <div class="drill-panel" id="drill-${i}">
+        <div class="drill-scroll">
+          ${(s.records||[]).map(r=>`
+            <div class="drill-row">
+              <span class="drill-date">${r.date}</span>
+              <span class="${r.status==='Present'?'drill-p':r.status==='Absent'?'drill-a':'drill-o'}">${r.status}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    card.addEventListener('click', () => card.querySelector('.drill-panel').classList.toggle('open'));
+    sl.appendChild(card);
+  });
+
+  setTimeout(()=>{
+    document.querySelectorAll('.sub-bar-fill[data-w]').forEach(el=>{ el.style.width=el.dataset.w; });
+  }, 120);
+
+  // Need section
+  const needSubs = d.subjects.filter(s=>need(s.present,s.total)>0);
+  if (needSubs.length) {
+    $('need-section').style.display = 'block';
+    $('need-grid').innerHTML = needSubs.map(s=>{
+      const n = need(s.present, s.total);
+      return `<div class="need-item">
+        <div class="need-sub">${s.subject.split(' ').slice(0,3).join(' ')}</div>
+        <div class="need-num">${n}</div>
+        <div class="need-desc">classes needed for 75%</div>
+      </div>`;
+    }).join('');
+  } else {
+    $('need-section').style.display = 'none';
+  }
+
+  // Holidays on dash
+  renderHolidays('dash-holidays', 8);
+
+  // Show dashboard
+  $('login-section').style.display    = 'none';
+  $('dashboard-section').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
